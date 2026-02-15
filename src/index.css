@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+/* BocaBoca palette: yellow #f0e447, purple #8f41b5 */
+@theme {
+  --color-primary-50: #f5eef9;
+  --color-primary-100: #edddf5;
+  --color-primary-200: #d9bceb;
+  --color-primary-300: #c59be0;
+  --color-primary-400: #b07ad5;
+  --color-primary-500: #9c59ca;
+  --color-primary-600: #8f41b5;
+  --color-primary-700: #7a3699;
+  --color-primary-800: #652b7d;
+  --color-primary-900: #502061;
+  --color-accent: #f0e447;
+  --font-script: 'Dancing Script', cursive;
+  --font-elegant: 'Cormorant Garamond', serif;
+}
