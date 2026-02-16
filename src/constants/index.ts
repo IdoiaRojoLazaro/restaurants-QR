@@ -51,19 +51,25 @@ export const STORAGE_KEYS = {
   MENU_INTRO_VIDEO_SEEN: 'menuIntroVideoSeen',
 };
 
-/** URL del vídeo de bienvenida (10 s) al entrar al menú por primera vez. Poner el archivo en public/intro.mp4 */
-export const MENU_INTRO_VIDEO_URL = '/intro.mp4';
+/** URL del vídeo de bienvenida. Archivo en public/intro.mp4 (Vite sirve public/ en la raíz). */
+export const MENU_INTRO_VIDEO_URL =
+  (import.meta.env.BASE_URL === '/'
+    ? ''
+    : import.meta.env.BASE_URL.replace(/\/$/, '')) + '/intro.mp4';
+/** Si prefieres un vídeo de YouTube, pega aquí la URL completa (ej: https://www.youtube.com/watch?v=XXXXX). Si está definido, se usará en lugar de MENU_INTRO_VIDEO_URL */
+export const MENU_INTRO_VIDEO_YOUTUBE_URL: string | undefined = undefined;
 export const MENU_INTRO_VIDEO_DURATION_MS = 10_000;
 
 /** Nombres por defecto para inicializar categorías (se convierten a Category con id) */
 export const DEFAULT_CATEGORY_NAMES = [
-  'Entrantes',
-  'Ensaladas',
-  'Pizza',
-  'Pasta',
-  'Principales',
+  'Para picar / entrantes',
+  'Ensaladas y vegetales',
+  'Plato principal',
   'Postres',
+  'Vinos',
   'Bebidas',
+  'Cerveza',
+  'Ginebra',
 ];
 
 // View types
@@ -78,37 +84,37 @@ export const VIEWS = {
 export const DEMO_MENU_ITEMS: MenuItem[] = [
   {
     id: 1,
-    name: 'Margherita Pizza',
-    category: 'Pizza',
-    price: 12.99,
-    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400',
-    description: 'Tomate, mozzarella fresca y albahaca.',
-    allergens: ['gluten', 'milk'],
+    name: 'Ensalada de ventresca de atún sobre encebollado, manzana y puerro',
+    category: 'Ensaladas y vegetales',
+    price: 17,
+    image: '/ventresca.jpg',
+    description: '',
+    allergens: ['pescado'],
   },
   {
     id: 2,
-    name: 'Lanzarote Pizza',
-    category: 'Pizza',
-    price: 11.99,
-    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400',
+    name: 'Solomillo vaca premium (según peso)',
+    category: 'Carnes',
+    price: 10,
+    image: '/solomillo.jpg',
     description: 'Base de tomate con queso y ingredientes de la isla.',
     allergens: ['gluten', 'milk'],
   },
   {
     id: 3,
-    name: 'Caesar Salad',
-    category: 'Salads',
-    price: 8.99,
-    image: 'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=400',
+    name: 'Cabra estofada con puré de papas o con papas fritas',
+    category: 'Carnes',
+    price: 16.5,
+    image: 'estofado.jpg',
     description: 'Lechuga romana, parmesano, crutones y salsa César.',
     allergens: ['eggs', 'milk', 'gluten'],
   },
   {
     id: 4,
-    name: 'Spaghetti Carbonara',
-    category: 'Pasta',
+    name: 'hamburguesa',
+    category: 'Hamburguesa',
     price: 14.99,
-    image: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400',
+    image: 'hamburguesa_1.jpg',
     description: 'Pasta con huevo, guanciale, pecorino y pimienta negra.',
     allergens: ['gluten', 'eggs', 'milk'],
   },

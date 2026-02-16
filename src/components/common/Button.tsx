@@ -28,11 +28,11 @@ const Button = ({
   title,
 }: ButtonProps) => {
   const baseClasses =
-    'rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2';
+    'rounded-full font-medium transition-colors duration-200 flex items-center justify-center gap-2';
 
   const variantClasses = {
     primary:
-      'bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-300',
+      'btn-main bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-300',
     secondary:
       'bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:bg-gray-100',
     danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-300',

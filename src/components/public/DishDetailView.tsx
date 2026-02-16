@@ -1,4 +1,5 @@
-import {ChevronLeft, Filter, UtensilsCrossed, Bookmark} from 'lucide-react';
+import {useState} from 'react';
+import {ChevronLeft, Filter, UtensilsCrossed, Bookmark, ChevronDown} from 'lucide-react';
 import {formatPrice} from '../../utils/helpers';
 import {AllergenIcons} from '../common/AllergenIcons';
 import type {MenuItem} from '../../constants';
@@ -11,9 +12,11 @@ interface DishDetailViewProps {
   onToggleSave?: () => void;
 }
 
+const fontElegant = {fontFamily: 'var(--font-elegant)'};
+
 /**
  * Vista de detalle del plato: imagen a pantalla completa con overlay oscuro
- * en la parte inferior (nombre, precio, descripción, Saber más).
+ * en la parte inferior (nombre, precio, descripción desplegable, Saber más).
  */
 export default function DishDetailView({
   item,
@@ -22,12 +25,16 @@ export default function DishDetailView({
   isSaved = false,
   onToggleSave,
 }: DishDetailViewProps) {
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const description = item.description?.trim() || item.category;
 
   return (
     <div className='fixed inset-0 bg-black z-50 flex flex-col overflow-hidden'>
       {/* Header: atrás, título categoría, iconos */}
-      <header className='flex items-center justify-between h-14 px-4 bg-black/95 shrink-0 z-10'>
+      <header
+        className='flex items-center justify-between h-14 px-4 bg-black/95 shrink-0 z-10'
+        style={fontElegant}
+      >
         <button
           type='button'
           onClick={onClose}
@@ -36,7 +43,7 @@ export default function DishDetailView({
         >
           <ChevronLeft className='w-6 h-6' />
         </button>
-        <h2 className='text-white font-semibold text-base uppercase tracking-wide'>
+        <h2 className='text-white font-light text-base uppercase tracking-[0.2em]'>
           {categoryTitle}
         </h2>
         <div className='flex items-center gap-1'>
@@ -81,10 +88,16 @@ export default function DishDetailView({
               'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 50%, transparent 100%)',
           }}
         >
-          <h1 className='text-white font-bold text-2xl md:text-3xl tracking-tight'>
+          <h1
+            className='text-white font-light text-2xl md:text-3xl tracking-tight'
+            style={fontElegant}
+          >
             {item.name}
           </h1>
-          <p className='text-white/90 font-medium text-lg md:text-xl mt-1'>
+          <p
+            className='text-white/90 font-normal text-lg md:text-xl mt-1 tracking-wide'
+            style={fontElegant}
+          >
             {formatPrice(item.price)}
           </p>
           {item.allergens?.length ? (
@@ -95,18 +108,34 @@ export default function DishDetailView({
               className='mt-2 [&_span]:bg-white/20 [&_span]:text-white'
             />
           ) : null}
-          <p
-            className='text-white/80 text-[18px] md:text-xl mt-3 leading-relaxed max-w-2xl'
-            style={{fontFamily: 'var(--font-elegant)'}}
+
+          {/* Descripción desplegable con animación */}
+          <div
+            className='grid transition-[grid-template-rows] duration-300 ease-out'
+            style={{gridTemplateRows: descriptionExpanded ? '1fr' : '0fr'}}
           >
-            {description}
-          </p>
+            <div className='overflow-hidden'>
+              <p
+                className='text-white/80 text-[17px] md:text-lg mt-3 leading-relaxed max-w-2xl'
+                style={fontElegant}
+              >
+                {description}
+              </p>
+            </div>
+          </div>
+
           <button
             type='button'
-            className='mt-4 text-[#f0e447] font-semibold text-sm uppercase tracking-wider hover:underline focus:outline-none'
+            onClick={() => setDescriptionExpanded((v) => !v)}
+            className='mt-3 flex items-center gap-1.5 text-white/90 border border-white/40 hover:border-white/70 hover:text-white rounded-full px-4 py-2 text-sm font-light tracking-wide transition-colors duration-200'
+            style={fontElegant}
           >
-            Saber más
+            {descriptionExpanded ? 'Ver menos' : 'Saber más'}
+            <ChevronDown
+              className={`w-4 h-4 transition-transform duration-300 ${descriptionExpanded ? 'rotate-180' : ''}`}
+            />
           </button>
+
           {onToggleSave && (
             <button
               type='button'
@@ -119,8 +148,8 @@ export default function DishDetailView({
               <Bookmark
                 className='w-6 h-6'
                 strokeWidth={2}
-                fill={isSaved ? '#f0e447' : 'transparent'}
-                color={isSaved ? '#f0e447' : undefined}
+                fill={isSaved ? '#fcaa2d' : 'transparent'}
+                color={isSaved ? '#fcaa2d' : undefined}
               />
             </button>
           )}

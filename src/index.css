@@ -1,18 +1,82 @@
 @import 'tailwindcss';
 
-/* BocaBoca palette: yellow #f0e447, purple #8f41b5 */
+/* BocaBoca palette: yellow #fcaa2d, purple #8f41b5 */
+
 @theme {
-  --color-primary-50: #f5eef9;
-  --color-primary-100: #edddf5;
-  --color-primary-200: #d9bceb;
-  --color-primary-300: #c59be0;
-  --color-primary-400: #b07ad5;
-  --color-primary-500: #9c59ca;
-  --color-primary-600: #8f41b5;
-  --color-primary-700: #7a3699;
-  --color-primary-800: #652b7d;
-  --color-primary-900: #502061;
-  --color-accent: #f0e447;
+  --color-surface-dark: #18181b; /* Fondo general (mantener) */
+  --color-surface-card: #232325; /* Card o paneles (mantener) */
+  --color-public-bg-from: #222221; /* Fondo gradiente inicio */
+  --color-public-bg-to: #030302; /* Fondo gradiente fin */
+  --color-public-card: #262521; /* Cards adicionales */
+
+  /* Textos */
+  --color-text-light: #fafafa; /* Texto principal */
+  --color-text-muted: #b0aeb8; /* Texto secundario/muted */
+
+  --color-primary-50: #fff6e8;
+  --color-primary-100: #ffebc7;
+  --color-primary-200: #ffd184;
+  --color-primary-300: #ffc35e;
+  --color-primary-400: #feb43f;
+  --color-primary-500: #fcaa2d; /* color-accent original */
+  --color-primary-600: #e98c09;
+  --color-primary-700: #b46a06;
+  --color-primary-800: #7e4904;
+  --color-primary-900: #502e02;
+
+  --color-accent: #fcaa2d;
+
+  /* Bordes, lines, iconos: puedes utilizar los tonos violeta si buscas algo distintivo, pero el mockup usa principalmente negro y naranja */
+
+  /* Fonts elegantes (mockup usa display serif/script y sans) */
   --font-script: 'Dancing Script', cursive;
   --font-elegant: 'Cormorant Garamond', serif;
+  --font-sans: 'Montserrat', sans-serif;
+}
+
+.btn-main {
+  @apply bg-accent text-surface-dark font-elegant text-lg px-6 py-3 rounded-full shadow-md transition hover:bg-primary-500;
+}
+
+.card-menu {
+  @apply bg-surface-card rounded-lg shadow-lg p-5 flex flex-col items-center;
+}
+
+.title-elegant {
+  @apply font-elegant text-3xl text-accent tracking-wider;
+}
+
+.text-muted {
+  @apply text-text-muted font-sans text-sm;
+}
+
+.bg-main {
+  @apply bg-surface-dark min-h-screen text-text-light;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+.title-elegant {
+  font-family: var(--font-elegant);
+}
+
+.bg-gradient-main {
+  background: linear-gradient(180deg, #232325 0%, #18181b 100%);
+  min-height: 100vh;
+  color: var(--color-text-light);
+}
+
+.bg-gradient-public-menu {
+  background: linear-gradient(
+    to bottom,
+    var(--color-public-bg-from) 0%,
+    var(--color-public-bg-to) 100%
+  );
+  min-height: 100vh;
+  color: white;
+}
+
+.bg-public-card {
+  background-color: var(--color-public-card);
 }

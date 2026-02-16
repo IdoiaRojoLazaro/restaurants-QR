@@ -29,12 +29,13 @@ const MenuItemCard = ({
         role={isClickable ? 'button' : undefined}
         onClick={isClickable ? () => onClick?.(item) : undefined}
         className={`
-          group relative flex flex-col overflow-hidden rounded-xl border-2 border-neutral-800
+          group relative flex flex-col overflow-hidden rounded-xl border border-gray-300
           transition-colors duration-200
-          ${isClickable ? 'cursor-pointer hover:border-[#f0e447]' : ''}
+          
+          ${isClickable ? 'cursor-pointer hover:border-accent' : ''}
         `}
       >
-        <div className='aspect-square w-full overflow-hidden bg-neutral-900'>
+        <div className='aspect-square w-full overflow-hidden'>
           {item.image ? (
             <img
               src={item.image}
@@ -62,13 +63,13 @@ const MenuItemCard = ({
             <Bookmark
               className='w-5 h-5'
               strokeWidth={2}
-              fill={isSaved ? '#f0e447' : 'transparent'}
-              color={isSaved ? '#f0e447' : undefined}
+              fill={isSaved ? '#fcaa2d' : 'transparent'}
+              color={isSaved ? '#fcaa2d' : undefined}
             />
           </button>
         )}
         <div className='p-3 md:p-4 flex flex-col gap-1'>
-          <h3 className='text-white font-bold text-sm md:text-base uppercase tracking-wide line-clamp-2'>
+          <h3 className='text-sm md:text-base tracking-wide line-clamp-2'>
             {item.name}
           </h3>
           {item.allergens?.length ? (
@@ -79,9 +80,7 @@ const MenuItemCard = ({
               className='[&_span]:bg-neutral-700 [&_span]:text-white'
             />
           ) : null}
-          <p className='text-[#f0e447] font-semibold text-base md:text-lg'>
-            {formatPrice(item.price)}
-          </p>
+          <p className='text-base md:text-lg'>{formatPrice(item.price)}</p>
         </div>
       </article>
     );

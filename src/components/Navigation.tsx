@@ -36,21 +36,38 @@ const Navigation = ({currentView, onViewChange}: NavigationProps) => {
           </a>
 
           {/* Navigation Items */}
-          <div className='flex gap-2'>
-            {navItems.map(({id, label, icon: Icon}) => (
-              <button
-                key={id}
-                onClick={() => onViewChange(id)}
-                className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
-                  currentView === id
-                    ? 'bg-primary-600 text-white'
-                    : 'hover:bg-gray-100'
-                }`}
-              >
-                <Icon className='w-4 h-4' />
-                <span className='hidden sm:inline'>{label}</span>
-              </button>
-            ))}
+          <div className="flex gap-2">
+            {navItems.map(({id, label, icon: Icon}) => {
+              const isCartaDigital = id === VIEWS.PUBLIC;
+              if (isCartaDigital) {
+                return (
+                  <a
+                    key={id}
+                    href="/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 rounded-lg flex items-center gap-2 transition-colors hover:bg-gray-100"
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="hidden sm:inline">{label}</span>
+                  </a>
+                );
+              }
+              return (
+                <button
+                  key={id}
+                  onClick={() => onViewChange(id)}
+                  className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
+                    currentView === id
+                      ? 'bg-primary-600 text-white'
+                      : 'hover:bg-gray-100'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -93,7 +93,7 @@ export default function MySelectionView({
                         </span>
                       )}
                     </div>
-                    <p className='text-[#f0e447] font-medium text-sm mt-0.5'>
+                    <p className='text-[#fcaa2d] font-medium text-sm mt-0.5'>
                       {formatPrice(item.price)} × {qty} ={' '}
                       {formatPrice(subtotal)}
                     </p>
@@ -143,14 +143,14 @@ export default function MySelectionView({
         <footer className='shrink-0 px-4 py-5 bg-neutral-900/90 border-t border-neutral-800'>
           <div className='flex items-center justify-between gap-4'>
             <div className='flex items-center gap-2'>
-              <ChefHat className='w-5 h-5 text-[#f0e447] shrink-0' />
+              <ChefHat className='w-5 h-5 text-[#fcaa2d] shrink-0' />
               <span className='text-white font-semibold tabular-nums'>
                 {totalUnits} {totalUnits === 1 ? 'plato' : 'platos'}
               </span>
             </div>
             <div className='flex items-center gap-2'>
               <span className='text-neutral-400 text-sm'>Total</span>
-              <p className='text-[#f0e447] font-bold text-2xl tabular-nums'>
+              <p className='text-[#fcaa2d] font-bold text-2xl tabular-nums'>
                 {formatPrice(totalMoney)}
               </p>
             </div>
