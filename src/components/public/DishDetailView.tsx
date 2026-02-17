@@ -1,6 +1,7 @@
 import {useState} from 'react';
-import {ChevronLeft, Filter, UtensilsCrossed, Bookmark, ChevronDown} from 'lucide-react';
-import {formatPrice} from '../../utils/helpers';
+import {Bookmark, ChevronDown, Share2} from 'lucide-react';
+import PublicHeader from './PublicHeader';
+import {formatPrice, getWhatsAppShareUrl} from '../../utils/helpers';
 import {AllergenIcons} from '../common/AllergenIcons';
 import type {MenuItem} from '../../constants';
 
@@ -10,6 +11,9 @@ interface DishDetailViewProps {
   onClose: () => void;
   isSaved?: boolean;
   onToggleSave?: () => void;
+  onOpenFilters?: () => void;
+  onGoToFavorites?: () => void;
+  filterActive?: boolean;
 }
 
 const fontElegant = {fontFamily: 'var(--font-elegant)'};
@@ -24,45 +28,27 @@ export default function DishDetailView({
   onClose,
   isSaved = false,
   onToggleSave,
+  onOpenFilters,
+  onGoToFavorites,
+  filterActive = false,
 }: DishDetailViewProps) {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const description = item.description?.trim() || item.category;
 
+  const handleShareWhatsApp = () => {
+    const url = getWhatsAppShareUrl(item, categoryTitle);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className='fixed inset-0 bg-black z-50 flex flex-col overflow-hidden'>
-      {/* Header: atrás, título categoría, iconos */}
-      <header
-        className='flex items-center justify-between h-14 px-4 bg-black/95 shrink-0 z-10'
-        style={fontElegant}
-      >
-        <button
-          type='button'
-          onClick={onClose}
-          className='p-2 -ml-2 text-white hover:bg-white/10 rounded-full transition-colors'
-          aria-label='Volver'
-        >
-          <ChevronLeft className='w-6 h-6' />
-        </button>
-        <h2 className='text-white font-light text-base uppercase tracking-[0.2em]'>
-          {categoryTitle}
-        </h2>
-        <div className='flex items-center gap-1'>
-          <button
-            type='button'
-            className='p-2 text-white hover:bg-white/10 rounded-full transition-colors'
-            aria-label='Filtros'
-          >
-            <Filter className='w-5 h-5' />
-          </button>
-          <button
-            type='button'
-            className='p-2 text-white hover:bg-white/10 rounded-full transition-colors'
-            aria-label='Menú'
-          >
-            <UtensilsCrossed className='w-5 h-5' />
-          </button>
-        </div>
-      </header>
+      <PublicHeader
+        onBack={onClose}
+        onOpenFilters={onOpenFilters}
+        onGoToFavorites={onGoToFavorites}
+        filterActive={filterActive}
+        fixed
+      />
 
       {/* Imagen grande + overlay inferior */}
       <div className='relative flex-1 min-h-0 flex flex-col'>
@@ -100,16 +86,8 @@ export default function DishDetailView({
           >
             {formatPrice(item.price)}
           </p>
-          {item.allergens?.length ? (
-            <AllergenIcons
-              allergenIds={item.allergens}
-              size='md'
-              variant='badges'
-              className='mt-2 [&_span]:bg-white/20 [&_span]:text-white'
-            />
-          ) : null}
 
-          {/* Descripción desplegable con animación */}
+          {/* Descripción, alérgenos y sugerencias desplegables con animación */}
           <div
             className='grid transition-[grid-template-rows] duration-300 ease-out'
             style={{gridTemplateRows: descriptionExpanded ? '1fr' : '0fr'}}
@@ -121,6 +99,32 @@ export default function DishDetailView({
               >
                 {description}
               </p>
+              {item.allergens && item.allergens.length > 0 && (
+                <div className='mt-3'>
+                  <AllergenIcons
+                    allergenIds={item.allergens}
+                    size='md'
+                    variant='badges'
+                    className='[&_span]:bg-white/20 [&_span]:text-white'
+                  />
+                </div>
+              )}
+              {item.suggestions && item.suggestions.length > 0 && (
+                <div className='mt-4 pt-4 border-t border-white/20'>
+                  <p
+                    className='text-white/60 text-xs uppercase tracking-[0.2em] mb-2'
+                    style={fontElegant}
+                  >
+                    Sugerencias
+                  </p>
+                  <p
+                    className='text-white/75 text-[15px] md:text-base leading-relaxed'
+                    style={fontElegant}
+                  >
+                    {item.suggestions.join(' · ')}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -136,23 +140,33 @@ export default function DishDetailView({
             />
           </button>
 
-          {onToggleSave && (
+          <div className='absolute bottom-6 right-4 md:right-6 flex items-center gap-1'>
             <button
               type='button'
-              onClick={() => onToggleSave()}
-              className='absolute bottom-6 right-4 md:right-6 p-2 text-white hover:bg-white/10 rounded-full transition-colors'
-              aria-label={
-                isSaved ? 'Quitar de mi selección' : 'Guardar en mi selección'
-              }
+              onClick={handleShareWhatsApp}
+              className='p-2 text-white hover:bg-white/10 rounded-full transition-colors'
+              aria-label='Compartir por WhatsApp'
             >
-              <Bookmark
-                className='w-6 h-6'
-                strokeWidth={2}
-                fill={isSaved ? '#fcaa2d' : 'transparent'}
-                color={isSaved ? '#fcaa2d' : undefined}
-              />
+              <Share2 className='w-6 h-6' />
             </button>
-          )}
+            {onToggleSave && (
+              <button
+                type='button'
+                onClick={() => onToggleSave()}
+                className='p-2 text-white hover:bg-white/10 rounded-full transition-colors'
+                aria-label={
+                  isSaved ? 'Quitar de mi selección' : 'Guardar en mi selección'
+                }
+              >
+                <Bookmark
+                  className='w-6 h-6'
+                  strokeWidth={2}
+                  fill={isSaved ? '#fcaa2d' : 'transparent'}
+                  color={isSaved ? '#fcaa2d' : undefined}
+                />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

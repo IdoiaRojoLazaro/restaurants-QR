@@ -9,6 +9,8 @@ interface MenuItemCardProps {
   variant?: 'default' | 'dark' | 'darkCompact';
   isSaved?: boolean;
   onToggleSave?: (e: React.MouseEvent) => void;
+  /** Si true, el plato se muestra deshabilitado (ej. contiene alérgenos filtrados) */
+  disabled?: boolean;
 }
 
 /**
@@ -20,8 +22,9 @@ const MenuItemCard = ({
   variant = 'darkCompact',
   isSaved = false,
   onToggleSave,
+  disabled = false,
 }: MenuItemCardProps) => {
-  const isClickable = Boolean(onClick);
+  const isClickable = Boolean(onClick) && !disabled;
 
   if (variant === 'darkCompact') {
     return (
@@ -31,9 +34,10 @@ const MenuItemCard = ({
         className={`
           group relative flex flex-col overflow-hidden rounded-xl border border-gray-300
           transition-colors duration-200
-          
+          ${disabled ? 'opacity-60 pointer-events-none' : ''}
           ${isClickable ? 'cursor-pointer hover:border-accent' : ''}
         `}
+        aria-disabled={disabled || undefined}
       >
         <div className='aspect-square w-full overflow-hidden'>
           {item.image ? (
@@ -69,6 +73,11 @@ const MenuItemCard = ({
           </button>
         )}
         <div className='p-3 md:p-4 flex flex-col gap-1'>
+          {disabled && (
+            <span className='text-xs font-medium text-amber-700 bg-amber-100 rounded px-2 py-0.5 w-fit'>
+              Contiene alérgenos seleccionados
+            </span>
+          )}
           <h3 className='text-sm md:text-base tracking-wide line-clamp-2'>
             {item.name}
           </h3>

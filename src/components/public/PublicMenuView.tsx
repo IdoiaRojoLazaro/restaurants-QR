@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import MenuItemCard from './MenuItemCard';
 import DishDetailView from './DishDetailView';
+import PublicHeader from './PublicHeader';
 import {useSelection} from '../../hooks/useSelection';
 import type {MenuItem} from '../../constants';
 
@@ -9,12 +10,29 @@ interface PublicMenuViewProps {
   /** Categoría que se está mostrando (vista lista de platos) */
   selectedCategory: string;
   onBackToCategories: () => void;
+  onOpenFilters?: () => void;
+  onGoToFavorites?: () => void;
+  filterActive?: boolean;
+  /** Alérgenos seleccionados en el filtro: platos que los contengan se muestran deshabilitados */
+  selectedAllergenIds?: string[];
+}
+
+function itemContainsSelectedAllergens(
+  item: MenuItem,
+  selectedAllergenIds: string[],
+): boolean {
+  if (!selectedAllergenIds.length || !item.allergens?.length) return false;
+  return item.allergens.some((a) => selectedAllergenIds.includes(a));
 }
 
 const PublicMenuView = ({
   menuItems,
   selectedCategory,
   onBackToCategories,
+  onOpenFilters,
+  onGoToFavorites,
+  filterActive = false,
+  selectedAllergenIds = [],
 }: PublicMenuViewProps) => {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
@@ -29,28 +47,24 @@ const PublicMenuView = ({
     setSelectedItem(null);
   };
 
+  const handleGoToFavorites = () => {
+    closeDetail();
+    onGoToFavorites?.();
+  };
+
   return (
-    <div className='min-h-screen w-full bg-white'>
-      <div className='max-w-4xl mx-auto px-4 py-6 md:py-10'>
-        <header className='mb-6 md:mb-8'>
-          <button
-            type='button'
-            onClick={onBackToCategories}
-            className='flex items-center gap-2 text-neutral-600 hover:text-neutral-900 text-sm mb-4 transition-colors'
-          >
-            <span aria-hidden>←</span>
-            Volver a categorías
-          </button>
-          <h1
-            className='text-3xl md:text-4xl font-semibold tracking-wide text-neutral-800 mb-2'
-            style={{fontFamily: 'var(--font-elegant)'}}
-          >
-            {selectedCategory}
-          </h1>
-          <p className='text-neutral-500 text-xs md:text-sm tracking-widest uppercase'>
-            Toca un plato para ver el detalle
-          </p>
-        </header>
+    <div className='min-h-screen w-full bg-white flex flex-col'>
+      <PublicHeader
+        onBack={onBackToCategories}
+        onOpenFilters={onOpenFilters}
+        onGoToFavorites={onGoToFavorites}
+        filterActive={filterActive}
+        title={selectedCategory}
+      />
+      <div className='max-w-4xl mx-auto px-4 py-6 md:py-10 flex-1'>
+        <p className='text-neutral-500 text-xs md:text-sm tracking-widest uppercase mb-6' style={{fontFamily: 'var(--font-elegant)'}}>
+          Toca un plato para ver el detalle
+        </p>
 
         {items.length === 0 ? (
           <div className='text-center py-20 text-neutral-500'>
@@ -66,6 +80,7 @@ const PublicMenuView = ({
                 onClick={(i) => openDetail(i)}
                 isSaved={isSaved(item.id)}
                 onToggleSave={() => toggleSaved(item.id)}
+                disabled={itemContainsSelectedAllergens(item, selectedAllergenIds)}
               />
             ))}
           </div>
@@ -79,6 +94,9 @@ const PublicMenuView = ({
           onClose={closeDetail}
           isSaved={isSaved(selectedItem.id)}
           onToggleSave={() => toggleSaved(selectedItem.id)}
+          onOpenFilters={onOpenFilters}
+          onGoToFavorites={onGoToFavorites ? handleGoToFavorites : undefined}
+          filterActive={filterActive}
         />
       )}
     </div>

@@ -94,3 +94,21 @@ export const formatDate = (isoDate: string): string => {
     minute: '2-digit',
   });
 };
+
+/**
+ * Build WhatsApp share URL for a menu item.
+ * Opens WhatsApp (or web) with pre-filled message: name, category, price, description.
+ */
+export const getWhatsAppShareUrl = (
+  item: MenuItem,
+  categoryTitle: string,
+): string => {
+  const lines: string[] = [
+    `🍽 *${item.name}*`,
+    `${categoryTitle} · ${formatPrice(item.price)}`,
+  ];
+  const desc = item.description?.trim();
+  if (desc) lines.push('', desc);
+  const text = lines.join('\n');
+  return `https://wa.me/?text=${encodeURIComponent(text)}`;
+};

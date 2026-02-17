@@ -1,6 +1,8 @@
 import React from 'react';
 import CategoryCard from './CategoryCard';
-
+import PublicHeader from './PublicHeader';
+import {Users} from 'lucide-react';
+import {Button} from '../common';
 /**
  * Devuelve la URL de imagen del primer plato de la categoría que tenga imagen.
  */
@@ -13,7 +15,12 @@ export default function CategoriesView({
   categories,
   menuItems = [],
   onSelectCategory,
+  onOpenGroupOption,
+  onOpenFilters,
+  onGoToFavorites,
+  filterActive,
 }) {
+
   if (!categories?.length) {
     return (
       <main className='min-h-screen bg-white flex flex-col items-center justify-center px-4'>
@@ -29,26 +36,33 @@ export default function CategoriesView({
   }
 
   return (
-    <main className='min-h-screen bg-white flex flex-col px-4 py-8'>
-      <h1
-        className='text-2xl md:text-3xl text-neutral-800 font-semibold mb-1 text-center'
-        style={{fontFamily: 'var(--font-elegant)'}}
-      >
-        Menú
-      </h1>
-      <p className='mb-6 text-neutral-500 text-sm text-center'>
-        Elige una categoría y explora nuestra carta.
-      </p>
-      <section className='flex flex-col gap-4 max-w-2xl mx-auto w-full'>
-        {categories.map((categoryName) => (
-          <CategoryCard
-            key={categoryName}
-            title={categoryName}
-            imageUrl={getImageForCategory(menuItems, categoryName)}
-            onClick={() => onSelectCategory(categoryName)}
-          />
-        ))}
-      </section>
+    <main className='min-h-screen bg-white flex flex-col'>
+      <PublicHeader
+        onOpenFilters={onOpenFilters}
+        onGoToFavorites={onGoToFavorites}
+        filterActive={filterActive}
+        title='Menú'
+      />
+      <div className='px-4 py-6 flex flex-col flex-1'>
+        <p className='mb-6 text-neutral-500 text-sm text-center' style={{fontFamily: 'var(--font-elegant)'}}>
+          Elige una categoría y explora nuestra carta.
+        </p>
+        <section className='flex flex-col gap-4 max-w-2xl mx-auto w-full flex-1'>
+        {onOpenGroupOption && (
+          <Button variant='secondary' onClick={onOpenGroupOption}>
+            <Users className='w-5 h-5' /> Opción de grupos
+          </Button>
+        )}
+          {categories.map((categoryName) => (
+            <CategoryCard
+              key={categoryName}
+              title={categoryName}
+              imageUrl={getImageForCategory(menuItems, categoryName)}
+              onClick={() => onSelectCategory(categoryName)}
+            />
+          ))}
+        </section>
+      </div>
     </main>
   );
 }

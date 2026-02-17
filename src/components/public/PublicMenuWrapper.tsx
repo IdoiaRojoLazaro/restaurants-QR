@@ -1,20 +1,16 @@
 import {useState, useRef} from 'react';
+// @ts-expect-error CategoriesView is JSX, no types
 import CategoriesView from './CategoriesView';
 import PublicMenuView from './PublicMenuView';
+import MySelectionView from './MySelectionView';
+import GroupOptionModal from './GroupOptionModal';
+import AllergenFilterModal from './AllergenFilterModal';
 import {getUniqueCategories} from '../../utils/helpers';
 import {STORAGE_KEYS, MENU_INTRO_VIDEO_URL} from '../../constants';
 import type {MenuItem} from '../../constants';
 
 interface PublicMenuWrapperProps {
   menuItems: MenuItem[];
-}
-
-function hasSeenIntroVideo(): boolean {
-  try {
-    return localStorage.getItem(STORAGE_KEYS.MENU_INTRO_VIDEO_SEEN) === 'true';
-  } catch {
-    return false;
-  }
 }
 
 function markIntroVideoSeen(): void {
@@ -28,6 +24,10 @@ function markIntroVideoSeen(): void {
 const PublicMenuWrapper = ({menuItems}: PublicMenuWrapperProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showIntroVideo, setShowIntroVideo] = useState(true);
+  const [showFavoritesView, setShowFavoritesView] = useState(false);
+  const [showGroupOption, setShowGroupOption] = useState(false);
+  const [showAllergenFilter, setShowAllergenFilter] = useState(false);
+  const [selectedAllergenIds, setSelectedAllergenIds] = useState<string[]>([]);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeItems = menuItems.filter((item) => item.active !== false);
@@ -73,19 +73,46 @@ const PublicMenuWrapper = ({menuItems}: PublicMenuWrapperProps) => {
         </div>
       )}
 
-      {selectedCategory === null ? (
+      {showFavoritesView ? (
+        <div className="min-h-screen h-screen flex flex-col">
+          <MySelectionView
+            menuItems={activeItems}
+            onBack={() => setShowFavoritesView(false)}
+          />
+        </div>
+      ) : selectedCategory === null ? (
         <CategoriesView
           categories={categories}
           menuItems={activeItems}
           onSelectCategory={setSelectedCategory}
+          onOpenGroupOption={() => setShowGroupOption(true)}
+          onOpenFilters={() => setShowAllergenFilter(true)}
+          onGoToFavorites={() => setShowFavoritesView(true)}
+          filterActive={selectedAllergenIds.length > 0}
         />
       ) : (
         <PublicMenuView
           menuItems={activeItems}
           selectedCategory={selectedCategory}
           onBackToCategories={() => setSelectedCategory(null)}
+          onOpenFilters={() => setShowAllergenFilter(true)}
+          onGoToFavorites={() => setShowFavoritesView(true)}
+          filterActive={selectedAllergenIds.length > 0}
+          selectedAllergenIds={selectedAllergenIds}
         />
       )}
+
+      <GroupOptionModal
+        isOpen={showGroupOption}
+        onClose={() => setShowGroupOption(false)}
+      />
+
+      <AllergenFilterModal
+        isOpen={showAllergenFilter}
+        onClose={() => setShowAllergenFilter(false)}
+        selectedAllergenIds={selectedAllergenIds}
+        onSelectionChange={setSelectedAllergenIds}
+      />
     </div>
   );
 };
