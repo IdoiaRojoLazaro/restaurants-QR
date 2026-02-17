@@ -1,7 +1,10 @@
-import {ChevronLeft, Trash2, ChefHat, Minus, Plus} from 'lucide-react';
+import {Trash2, ChefHat, Minus, Plus} from 'lucide-react';
 import {formatPrice} from '../../utils/helpers';
 import {useSelection} from '../../hooks/useSelection';
+import PublicHeader from './PublicHeader';
 import type {MenuItem} from '../../constants';
+
+const fontElegant = {fontFamily: 'var(--font-elegant)'};
 
 interface MySelectionViewProps {
   menuItems: MenuItem[];
@@ -10,6 +13,7 @@ interface MySelectionViewProps {
 
 /**
  * Vista "Mi selección": platos guardados con selector de cantidad por plato.
+ * Misma estética que el resto de vistas públicas: fondo blanco y tipografía elegante.
  */
 export default function MySelectionView({
   menuItems,
@@ -29,34 +33,24 @@ export default function MySelectionView({
   );
 
   return (
-    <div className='h-full min-h-0 bg-black text-white flex flex-col'>
-      {/* Header */}
-      <header className='flex items-center h-14 px-4 bg-black border-b border-neutral-800 shrink-0'>
-        <button
-          type='button'
-          onClick={onBack}
-          className='p-2 -ml-2 text-white hover:bg-white/10 rounded-full transition-colors'
-          aria-label='Volver'
-        >
-          <ChevronLeft className='w-6 h-6' />
-        </button>
-        <h1 className='flex-1 text-center text-white font-semibold text-lg uppercase tracking-wide mr-8'>
-          Mi selección
-        </h1>
-      </header>
+    <div className='min-h-screen bg-white flex flex-col'>
+      <PublicHeader onBack={onBack} title='Mi selección' />
 
       {/* Lista de platos con selector de cantidad */}
-      <div className='flex-1 min-h-0 overflow-y-auto px-4 py-6'>
+      <div className='flex-1 overflow-y-auto px-4 py-6'>
         {selectedItems.length === 0 ? (
-          <div className='text-center py-16 text-neutral-400'>
-            <p className='text-lg mb-2'>Aún no has guardado ningún plato</p>
-            <p className='text-sm'>
+          <div
+            className='text-center py-16 text-neutral-500'
+            style={fontElegant}
+          >
+            <p className='text-xl mb-2 text-neutral-700'>Aún no has guardado ningún plato</p>
+            <p className='text-sm font-light'>
               Toca el icono de guardar en el menú o en el detalle de un plato
               para añadirlo aquí
             </p>
           </div>
         ) : (
-          <ul className='space-y-4'>
+          <ul className='space-y-4 max-w-2xl mx-auto'>
             {selectedItems.map((item) => {
               const qty = getQuantity(item.id);
               const subtotal = item.price * qty;
@@ -65,11 +59,11 @@ export default function MySelectionView({
                   key={item.id}
                   className={`flex items-center gap-4 p-4 rounded-xl border ${
                     item.active === false
-                      ? 'bg-neutral-900/50 border-neutral-700 opacity-75'
-                      : 'bg-neutral-900/80 border-neutral-800'
+                      ? 'bg-neutral-50 border-neutral-200 opacity-75'
+                      : 'bg-white border-neutral-200 shadow-sm'
                   }`}
                 >
-                  <div className='w-16 h-16 rounded-full overflow-hidden bg-neutral-800 shrink-0'>
+                  <div className='w-16 h-16 rounded-full overflow-hidden bg-neutral-100 shrink-0'>
                     {item.image ? (
                       <img
                         src={item.image}
@@ -77,23 +71,26 @@ export default function MySelectionView({
                         className='w-full h-full object-cover'
                       />
                     ) : (
-                      <div className='w-full h-full flex items-center justify-center text-neutral-500 text-xl'>
+                      <div
+                        className='w-full h-full flex items-center justify-center text-neutral-400 text-xl'
+                        style={fontElegant}
+                      >
                         —
                       </div>
                     )}
                   </div>
-                  <div className='flex-1 min-w-0'>
+                  <div className='flex-1 min-w-0' style={fontElegant}>
                     <div className='flex items-center gap-2'>
-                      <h2 className='text-white font-semibold text-base truncate'>
+                      <h2 className='text-neutral-800 font-medium text-lg truncate'>
                         {item.name}
                       </h2>
                       {item.active === false && (
-                        <span className='shrink-0 text-xs font-medium text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded'>
+                        <span className='shrink-0 text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded'>
                           No disponible
                         </span>
                       )}
                     </div>
-                    <p className='text-[#fcaa2d] font-medium text-sm mt-0.5'>
+                    <p className='text-primary-600 font-medium text-sm mt-0.5'>
                       {formatPrice(item.price)} × {qty} ={' '}
                       {formatPrice(subtotal)}
                     </p>
@@ -103,7 +100,7 @@ export default function MySelectionView({
                     <button
                       type='button'
                       onClick={() => removeFromSelection(item.id)}
-                      className='p-2 text-neutral-400 hover:text-red-400 hover:bg-white/5 rounded-full transition-colors'
+                      className='p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors'
                       aria-label='Quitar de mi selección'
                     >
                       <Trash2 className='w-5 h-5' />
@@ -111,13 +108,14 @@ export default function MySelectionView({
                     <button
                       type='button'
                       onClick={() => adjustQuantity(item.id, -1)}
-                      className='w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-700 text-white hover:bg-neutral-600 transition-colors'
+                      className='w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-700 hover:bg-neutral-100 transition-colors'
                       aria-label='Restar uno'
                     >
                       <Minus className='w-4 h-4' />
                     </button>
                     <span
-                      className='w-8 text-center text-white font-semibold tabular-nums'
+                      className='w-8 text-center text-neutral-800 font-semibold tabular-nums'
+                      style={fontElegant}
                       aria-live='polite'
                     >
                       {qty}
@@ -125,7 +123,7 @@ export default function MySelectionView({
                     <button
                       type='button'
                       onClick={() => adjustQuantity(item.id, 1)}
-                      className='w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-700 text-white hover:bg-neutral-600 transition-colors'
+                      className='w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-700 hover:bg-neutral-100 transition-colors'
                       aria-label='Añadir uno'
                     >
                       <Plus className='w-4 h-4' />
@@ -138,19 +136,22 @@ export default function MySelectionView({
         )}
       </div>
 
-      {/* Footer: total platos pedidos + total dinero en una línea */}
+      {/* Footer: total platos pedidos + total dinero */}
       {selectedItems.length > 0 && (
-        <footer className='shrink-0 px-4 py-5 bg-neutral-900/90 border-t border-neutral-800'>
-          <div className='flex items-center justify-between gap-4'>
+        <footer
+          className='shrink-0 px-4 py-5 bg-neutral-50 border-t border-neutral-200'
+          style={fontElegant}
+        >
+          <div className='flex items-center justify-between gap-4 max-w-2xl mx-auto'>
             <div className='flex items-center gap-2'>
-              <ChefHat className='w-5 h-5 text-[#fcaa2d] shrink-0' />
-              <span className='text-white font-semibold tabular-nums'>
+              <ChefHat className='w-5 h-5 text-primary-600 shrink-0' />
+              <span className='text-neutral-800 font-semibold tabular-nums'>
                 {totalUnits} {totalUnits === 1 ? 'plato' : 'platos'}
               </span>
             </div>
             <div className='flex items-center gap-2'>
-              <span className='text-neutral-400 text-sm'>Total</span>
-              <p className='text-[#fcaa2d] font-bold text-2xl tabular-nums'>
+              <span className='text-neutral-500 text-sm font-light'>Total</span>
+              <p className='text-primary-600 font-bold text-2xl tabular-nums'>
                 {formatPrice(totalMoney)}
               </p>
             </div>

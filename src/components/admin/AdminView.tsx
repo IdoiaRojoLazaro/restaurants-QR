@@ -1,15 +1,20 @@
 import {useState, useMemo} from 'react';
-import {Plus, UtensilsCrossed, FolderOpen} from 'lucide-react';
+import {Plus, UtensilsCrossed, FolderOpen, Users} from 'lucide-react';
 import MenuItemForm from './MenuItemForm';
 import MenuItemsTable from './MenuItemsTable';
 import CategoryForm from './CategoryForm';
 import CategoriesTable from './CategoriesTable';
+import AdminGroupOptionsView from './AdminGroupOptionsView';
 import {Button, Modal} from '../common';
 import {useCategories} from '../../hooks/useCategories';
 import type {MenuItem, Category} from '../../constants';
 import type {MenuItemFormData} from '../../utils/helpers';
 
-const ADMIN_TAB = {PLATOS: 'platos', CATEGORIAS: 'categorias'} as const;
+const ADMIN_TAB = {
+  PLATOS: 'platos',
+  CATEGORIAS: 'categorias',
+  OPCIONES_GRUPOS: 'opciones-grupos',
+} as const;
 
 interface AdminViewProps {
   menuItems: MenuItem[];
@@ -134,6 +139,18 @@ const AdminView = ({
             <FolderOpen className='w-4 h-4' />
             Categorías
           </button>
+          <button
+            type='button'
+            onClick={() => setAdminTab(ADMIN_TAB.OPCIONES_GRUPOS)}
+            className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
+              adminTab === ADMIN_TAB.OPCIONES_GRUPOS
+                ? 'bg-primary-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            <Users className='w-4 h-4' />
+            Opciones grupos
+          </button>
         </div>
       </div>
 
@@ -239,6 +256,10 @@ const AdminView = ({
             countByCategory={countByCategory}
           />
         </>
+      )}
+
+      {adminTab === ADMIN_TAB.OPCIONES_GRUPOS && (
+        <AdminGroupOptionsView menuItems={menuItems} />
       )}
     </div>
   );

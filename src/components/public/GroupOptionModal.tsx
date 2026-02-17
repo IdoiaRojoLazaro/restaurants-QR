@@ -1,11 +1,8 @@
 import {useState} from 'react';
 import {ChevronLeft, Users, X} from 'lucide-react';
 import {formatPrice} from '../../utils/helpers';
-import {
-  COMENSALES_OPTIONS,
-  GROUP_SHARING_OPTIONS,
-  type SharingOption,
-} from '../../constants';
+import {COMENSALES_OPTIONS} from '../../constants';
+import {useGroupOptions} from '../../hooks/useGroupOptions';
 
 const fontElegant = {fontFamily: 'var(--font-elegant)'};
 
@@ -16,16 +13,16 @@ interface GroupOptionModalProps {
 
 /**
  * Popup en dos pasos: (1) seleccionar número de comensales, (2) ver opciones para compartir.
+ * Las opciones se gestionan desde el admin (Opciones grupos).
  */
 export default function GroupOptionModal({
   isOpen,
   onClose,
 }: GroupOptionModalProps) {
   const [comensales, setComensales] = useState<number | null>(null);
+  const {getOptions} = useGroupOptions();
 
-  const options: SharingOption[] = comensales
-    ? GROUP_SHARING_OPTIONS[comensales] ?? []
-    : [];
+  const options = comensales ? getOptions(comensales) : [];
 
   const handleSelectComensales = (n: number) => {
     setComensales(n);

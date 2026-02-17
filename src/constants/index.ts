@@ -59,6 +59,8 @@ export const STORAGE_KEYS = {
   CATEGORIES: 'categories',
   /** Si el usuario ya vio el vídeo de bienvenida del menú */
   MENU_INTRO_VIDEO_SEEN: 'menuIntroVideoSeen',
+  /** Opciones para grupos (menús para 2, 4, 6, 8 personas) */
+  GROUP_OPTIONS: 'groupOptions',
 };
 
 /** URL del vídeo de bienvenida. Archivo en public/intro.mp4 (Vite sirve public/ en la raíz). */
