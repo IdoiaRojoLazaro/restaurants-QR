@@ -1,15 +1,12 @@
 import {useState} from 'react';
-import {Routes, Route} from 'react-router-dom';
+import {Routes, Route, Navigate} from 'react-router-dom';
 import Navigation from './components/Navigation';
 import AdminView from './components/admin/AdminView';
 import MySelectionView from './components/public/MySelectionView';
 import QRView from './components/QRView';
 import PublicCartaPage from './pages/PublicCartaPage';
 import {useMenuItems} from './hooks/useMenuItems';
-import {VIEWS} from './constants';
-
-const PUBLIC_CARTA_PATH = '/';
-const ADMIN_PATH = '/admin';
+import {VIEWS, ROUTES} from './constants';
 
 /**
  * Layout con navegación (Admin, QR, Mi selección). Carta digital abre en otra pestaña.
@@ -54,7 +51,7 @@ function MainLayout() {
         )}
         {currentView === VIEWS.QR && (
           <QRView
-            onPreviewMenu={() => window.open(PUBLIC_CARTA_PATH, '_blank', 'noopener,noreferrer')}
+            onPreviewMenu={() => window.open(ROUTES.PUBLIC, '_blank', 'noopener,noreferrer')}
           />
         )}
         {currentView === VIEWS.MY_SELECTION && (
@@ -71,8 +68,9 @@ function MainLayout() {
 function App() {
   return (
     <Routes>
-      <Route path={PUBLIC_CARTA_PATH} element={<PublicCartaPage />} />
-      <Route path={ADMIN_PATH} element={<MainLayout />} />
+      <Route path="/" element={<Navigate to={ROUTES.PUBLIC} replace />} />
+      <Route path={ROUTES.PUBLIC} element={<PublicCartaPage />} />
+      <Route path={ROUTES.ADMIN} element={<MainLayout />} />
     </Routes>
   );
 }

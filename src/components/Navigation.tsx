@@ -1,5 +1,5 @@
 import {Home, QrCode, Eye, Bookmark} from 'lucide-react';
-import {VIEWS} from '../constants';
+import {VIEWS, ROUTES} from '../constants';
 
 interface NavigationProps {
   currentView: string;
@@ -43,7 +43,7 @@ const Navigation = ({currentView, onViewChange}: NavigationProps) => {
                 return (
                   <a
                     key={id}
-                    href="/"
+                    href={`#${ROUTES.PUBLIC}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 rounded-lg flex items-center gap-2 transition-colors hover:bg-gray-100"

@@ -44,6 +44,14 @@ export interface Category {
   name: string;
 }
 
+/** Rutas de la app: público (carta) y gestión (admin) */
+export const ROUTES = {
+  /** Vista pública: menú / carta para clientes */
+  PUBLIC: '/casa-cristobal',
+  /** Vista de gestión del menú */
+  ADMIN: '/admin',
+} as const;
+
 // Storage keys
 export const STORAGE_KEYS = {
   MENU_ITEMS: 'menuItems',
@@ -82,7 +90,8 @@ export const GROUP_SHARING_OPTIONS: Record<number, SharingOption[]> = {
     {
       id: 'compartir-2-1',
       name: 'Menú para dos',
-      description: 'Selección de entrantes y principal para compartir en pareja.',
+      description:
+        'Selección de entrantes y principal para compartir en pareja.',
       price: 38,
       menuItemIds: [1, 2],
     },
