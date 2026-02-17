@@ -48,6 +48,7 @@ export default function DishDetailView({
         onGoToFavorites={onGoToFavorites}
         filterActive={filterActive}
         fixed
+        isDetailsView={true}
       />
 
       {/* Imagen grande + overlay inferior */}
