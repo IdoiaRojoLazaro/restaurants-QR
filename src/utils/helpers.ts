@@ -1,4 +1,5 @@
 import type {MenuItem} from '../constants';
+import {ROUTES} from '../constants';
 
 /**
  * Format price to display with currency symbol
@@ -41,6 +42,7 @@ export interface MenuItemFormData {
   category: string;
   price: string | number;
   image?: string;
+  videoUrl?: string;
   description?: string;
   /** Allergen ids (from ALLERGENS) */
   allergens?: string[];
@@ -96,19 +98,25 @@ export const formatDate = (isoDate: string): string => {
 };
 
 /**
+ * Build the full URL to the public carta (for sharing).
+ * If platoId is provided, adds ?plato=id so opening the link can deep-link to that dish.
+ */
+export const getPublicCartaUrl = (platoId?: number): string => {
+  if (typeof window === 'undefined') return '';
+  const base = `${window.location.origin}${window.location.pathname}`.replace(/\/$/, '') || window.location.origin;
+  const hash = `${ROUTES.PUBLIC}${platoId != null ? `?plato=${platoId}` : ''}`;
+  return `${base}#${hash}`;
+};
+
+/**
  * Build WhatsApp share URL for a menu item.
- * Opens WhatsApp (or web) with pre-filled message: name, category, price, description.
+ * Shares the link to the carta (with deep link to this dish) and the dish name so the preview looks good.
  */
 export const getWhatsAppShareUrl = (
   item: MenuItem,
-  categoryTitle: string,
+  _categoryTitle: string,
 ): string => {
-  const lines: string[] = [
-    `🍽 *${item.name}*`,
-    `${categoryTitle} · ${formatPrice(item.price)}`,
-  ];
-  const desc = item.description?.trim();
-  if (desc) lines.push('', desc);
-  const text = lines.join('\n');
+  const cartaUrl = getPublicCartaUrl(item.id);
+  const text = `🍽 ${item.name}\n\nVer en la carta: ${cartaUrl}`;
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 };

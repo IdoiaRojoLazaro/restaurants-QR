@@ -30,6 +30,7 @@ const MenuItemForm = ({
     category: '',
     price: '',
     image: '',
+    videoUrl: '',
     description: '',
     allergens: [],
   });
@@ -43,6 +44,7 @@ const MenuItemForm = ({
         category: item.category || '',
         price: item.price ?? '',
         image: item.image || '',
+        videoUrl: item.videoUrl || '',
         description: item.description || '',
         allergens: item.allergens ?? [],
       });
@@ -158,6 +160,14 @@ const MenuItemForm = ({
         onChange={handleChange('image')}
         placeholder='https://ejemplo.com/imagen.jpg'
         error={errors.image}
+      />
+
+      <Input
+        label='URL del vídeo (opcional)'
+        type='url'
+        value={formData.videoUrl ?? ''}
+        onChange={handleChange('videoUrl')}
+        placeholder='https://ejemplo.com/plato.mp4'
       />
 
       <div className='w-full'>

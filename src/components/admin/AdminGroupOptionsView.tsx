@@ -22,16 +22,22 @@ interface AdminGroupOptionsViewProps {
 type FormState = {
   name: string;
   description: string;
-  price: string;
   menuItemIds: number[];
 };
 
 const emptyForm: FormState = {
   name: '',
   description: '',
-  price: '',
   menuItemIds: [],
 };
+
+function totalFromMenuIds(menuItems: MenuItem[], menuItemIds: number[] | undefined): number {
+  if (!menuItemIds?.length) return 0;
+  const idSet = new Set(menuItemIds);
+  return menuItems
+    .filter((item) => idSet.has(item.id))
+    .reduce((sum, item) => sum + item.price, 0);
+}
 
 /**
  * Vista admin: crear y editar opciones para grupos (menús para 2, 4, 6, 8 personas).
@@ -69,7 +75,6 @@ export default function AdminGroupOptionsView({
     setForm({
       name: opt.name,
       description: opt.description ?? '',
-      price: opt.price != null ? String(opt.price) : '',
       menuItemIds: opt.menuItemIds ?? [],
     });
     setShowForm(true);
@@ -92,19 +97,16 @@ export default function AdminGroupOptionsView({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedComensales || !form.name.trim()) return;
-    const price = form.price.trim() ? parseFloat(form.price.replace(',', '.')) : undefined;
     if (editingOption) {
       updateOption(selectedComensales, editingOption.id, {
         name: form.name.trim(),
         description: form.description.trim() || undefined,
-        price: Number.isFinite(price) ? price : undefined,
         menuItemIds: form.menuItemIds.length ? form.menuItemIds : undefined,
       });
     } else {
       addOption(selectedComensales, {
         name: form.name.trim(),
         description: form.description.trim() || undefined,
-        price: Number.isFinite(price) ? price : undefined,
         menuItemIds: form.menuItemIds.length ? form.menuItemIds : undefined,
       });
     }
@@ -199,16 +201,16 @@ export default function AdminGroupOptionsView({
                   <p className="text-sm text-gray-600 mt-1">{opt.description}</p>
                 )}
                 <div className="flex items-center gap-3 mt-2 text-sm text-gray-500">
-                  {opt.price != null && (
-                    <span className="font-medium text-primary-600">
-                      {formatPrice(opt.price)}
-                    </span>
-                  )}
-                  {opt.menuItemIds && opt.menuItemIds.length > 0 && (
-                    <span>
-                      {opt.menuItemIds.length} plato
-                      {opt.menuItemIds.length !== 1 ? 's' : ''}
-                    </span>
+                  {(opt.menuItemIds?.length ?? 0) > 0 && (
+                    <>
+                      <span className="font-medium text-primary-600">
+                        {formatPrice(totalFromMenuIds(menuItems, opt.menuItemIds))}
+                      </span>
+                      <span>
+                        {opt.menuItemIds!.length} plato
+                        {opt.menuItemIds!.length !== 1 ? 's' : ''}
+                      </span>
+                    </>
                   )}
                 </div>
               </div>
@@ -269,18 +271,11 @@ export default function AdminGroupOptionsView({
               placeholder="Breve descripción para la carta"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Precio total (opcional, €)
-            </label>
-            <input
-              type="text"
-              value={form.price}
-              onChange={(e) => setForm((p) => ({ ...p, price: e.target.value }))}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              placeholder="Ej. 38"
-            />
-          </div>
+          {form.menuItemIds.length > 0 && (
+            <p className="text-sm text-primary-600 font-medium">
+              Total: {formatPrice(totalFromMenuIds(menuItems, form.menuItemIds))} (suma de los platos seleccionados)
+            </p>
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Platos incluidos (marca los que forman esta opción)

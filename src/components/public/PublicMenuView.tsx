@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import MenuItemCard from './MenuItemCard';
 import DishDetailView from './DishDetailView';
 import PublicHeader from './PublicHeader';
@@ -15,6 +15,8 @@ interface PublicMenuViewProps {
   filterActive?: boolean;
   /** Alérgenos seleccionados en el filtro: platos que los contengan se muestran deshabilitados */
   selectedAllergenIds?: string[];
+  /** Si viene de un enlace compartido (?plato=id), abrir este plato al montar */
+  initialItemId?: number;
 }
 
 function itemContainsSelectedAllergens(
@@ -33,11 +35,27 @@ const PublicMenuView = ({
   onGoToFavorites,
   filterActive = false,
   selectedAllergenIds = [],
+  initialItemId,
 }: PublicMenuViewProps) => {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const hasAppliedInitialId = useRef(false);
 
   const {isSaved, toggleSaved} = useSelection();
   const items = menuItems.filter((i) => i.category === selectedCategory);
+
+  useEffect(() => {
+    if (
+      initialItemId != null &&
+      items.length > 0 &&
+      !hasAppliedInitialId.current
+    ) {
+      const item = items.find((i) => i.id === initialItemId);
+      if (item) {
+        hasAppliedInitialId.current = true;
+        setSelectedItem(item);
+      }
+    }
+  }, [initialItemId, items]);
 
   const openDetail = (item: MenuItem) => {
     setSelectedItem(item);

@@ -51,10 +51,20 @@ export default function DishDetailView({
         isDetailsView={true}
       />
 
-      {/* Imagen grande + overlay inferior */}
+      {/* Vídeo o imagen + overlay inferior */}
       <div className='relative flex-1 min-h-0 flex flex-col'>
         <div className='absolute inset-0'>
-          {item.image ? (
+          {item.videoUrl ? (
+            <video
+              src={item.videoUrl}
+              poster={item.image}
+              className='w-full h-full object-cover object-center'
+              playsInline
+              muted
+              loop
+              autoPlay
+            />
+          ) : item.image ? (
             <img
               src={item.image}
               alt={item.name}

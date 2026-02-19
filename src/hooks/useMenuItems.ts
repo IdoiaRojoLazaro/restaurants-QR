@@ -71,6 +71,7 @@ export const useMenuItems = (): UseMenuItemsResult => {
       category: item.category,
       price: parseFloat(String(item.price)),
       image: item.image,
+      videoUrl: item.videoUrl?.trim() || undefined,
       description: item.description,
       allergens: item.allergens ?? [],
       active: true,
@@ -90,6 +91,7 @@ export const useMenuItems = (): UseMenuItemsResult => {
       category: updates.category,
       price: parseFloat(String(updates.price)),
       image: updates.image,
+      videoUrl: updates.videoUrl?.trim() || undefined,
       description: updates.description,
       allergens: updates.allergens ?? [],
     };

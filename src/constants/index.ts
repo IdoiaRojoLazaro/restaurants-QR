@@ -5,6 +5,8 @@ export interface MenuItem {
   category: string;
   price: number;
   image?: string;
+  /** URL de vídeo opcional; si existe, en el detalle se muestra el vídeo (la imagen se usa como poster/fallback) */
+  videoUrl?: string;
   description?: string;
   /** Allergen ids (from ALLERGENS) */
   allergens?: string[];
@@ -61,6 +63,8 @@ export const STORAGE_KEYS = {
   MENU_INTRO_VIDEO_SEEN: 'menuIntroVideoSeen',
   /** Opciones para grupos (menús para 2, 4, 6, 8 personas) */
   GROUP_OPTIONS: 'groupOptions',
+  /** Fecha en la que se mostró el popup "Jueves de hamburguesa" (YYYY-MM-DD) */
+  THURSDAY_BURGER_POPUP_DATE: 'thursdayBurgerPopupDate',
 };
 
 /** URL del vídeo de bienvenida. Archivo en public/intro.mp4 (Vite sirve public/ en la raíz). */
@@ -211,11 +215,12 @@ export const DEMO_MENU_ITEMS: MenuItem[] = [
   {
     id: 4,
     name: 'hamburguesa',
-    category: 'Hamburguesa',
+    category: 'Hamburguesas',
     price: 14.99,
     image: 'hamburguesa_1.jpg',
     description: 'Pasta con huevo, guanciale, pecorino y pimienta negra.',
     allergens: ['gluten', 'eggs', 'milk'],
     suggestions: ['Cerveza artesanal', 'Patatas fritas', 'Salsa brava'],
+    videoUrl: 'hamburguesa_video.mp4',
   },
 ];
